@@ -1,0 +1,12 @@
+const express = require("express")
+const { userregisters, postEmailConfirmation, signIn,signout, userlist, singleuser, resendverificationemail } = require("../Controller/usercontrol")
+const { registerationvalidation } = require("../validation")
+const router = express.Router()
+router.post("/register",registerationvalidation,userregisters)
+router.post('/confirmation/:token',postEmailConfirmation)
+router.post('/signin',signIn)
+router.post('/signout',signout)
+router.get('/user',userlist)
+router.get('/user/:id',singleuser)
+router.post('/resendlink',resendverificationemail)
+module.exports = router
