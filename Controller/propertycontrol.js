@@ -14,17 +14,7 @@ exports.postimages = async(req,res) =>
     if(response?.status === 200) {
       newProperty.latitude=response.data.latt;
       newProperty.longitude=response.data.longt;
-      // await newProperty.save();
     }
-    // axios.get('https://geocode.xyz', {params})
-    //   .then(response => {
-       
-    //     if(! newProperty) { return res.status(400).json({error:"not found"})}
-    //     console.log(response.data.longt);
-    //     console.log(response.data.latt)
-    //   }).catch(error => {
-    //     console.log(error);
-    //   });
     await newProperty.save();
     res.status(200).send(newProperty);
 };
