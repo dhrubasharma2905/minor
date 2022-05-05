@@ -1,33 +1,19 @@
 const User = require('../Models/userregister')
-const cloudinary=require('../utlis/cloudinary')
 const Token = require('../Models/tokenmodel')
 const sendEmail = require('../utlis/setemail')
-const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
 const expressjwt = require('express-jwt')
 exports.userregisters = async(req,res) =>
-{
-        
-    console.log(req.body, req.files);
-    try{
+{   
+    try{   
+        console.log(req.files)
         const findUser = await User.findOne({username:req.body.username})
-        const image = await cloudinary.uploader.upload(req.file.path)
         console.log(findUser);
         if(findUser) {
             throw new Error("username already exists");
         } else {
-            
-            let user = new User(
-                {
-                    firstname:req.body.firstname,
-                    lastname:req.body.lastname,
-                    password:req.body.password,
-                    email:req.body.email,
-                    username:req.body.username,
-                    phonenumber:req.body.phonenumber,
-                    cloudinaryid:image.secure_url
-                }
-            )
+            let user = new User(req.body);
+            user.images=req.files.map(f=>({url:f.path,filename:f.filename}));
             user = await user.save();
             if(!user){return res.status(400).json({error:"user not found"})}
             // let token = new Token(
@@ -44,7 +30,7 @@ exports.userregisters = async(req,res) =>
             //     text:`Hello,\n\n verify your email by clicking inthe link below:\n\n http:\/\/${req.headers.host}\/api/confirmation\/${token.token}`,
             //     //http://localhost:5000/api/confimation/abde245342d
             // })
-            res.send(user)
+            else res.send(user)
         }
     } catch (e) {
           return res.status(404).json({ err: e.message });
@@ -76,7 +62,9 @@ exports.userregisters = async(req,res) =>
 // })}
 // signin process
 exports.signIn = async(req,res)=>{
-    const{email,password}=req.body
+    console.log(req.body)
+    const {email,password} = req.body
+
     // const email = req.body.email
     // const password = req.body.password
     // at first check if email is registerd or not

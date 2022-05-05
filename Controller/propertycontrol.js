@@ -4,7 +4,8 @@ const axios = require('axios');
 exports.postimages = async(req,res) =>
 {  
     const newProperty = new Property(req.body);
-    newProperty.images=req.files.map(f=>({url:f.path,filename:f.filename}));
+    console.log(req.files)
+    newProperty.images=req.files.map(f=>({url:f.path,filename:f.filename,cloudinaryid:f.filename.slice(-20)}));
     const params = {
       auth: '388475087947669536643x61803',
       locate:req.body.propertyLocation,
@@ -18,29 +19,52 @@ exports.postimages = async(req,res) =>
     await newProperty.save();
     res.status(200).send(newProperty);
 };
-exports.updateimages = async(req,res)=>
+exports.updateproperties = async(req,res)=>
 {
-    const {id} = req.params
-    const newbase = await Property.findByIdAndUpdate(id,{...req.body})
+    
+    const newbase = await Property.findByIdAndUpdate(req.params.id,{...req.body},{new:true})
     const imgs = req.files.map(f=>({url:f.path,filename:f.filename}))
     console.log(imgs)
     newbase.images.push(...imgs)
     await newbase.save();
-    console.log(req.body.deleteimages)
     if(req.body.deleteimages)
     {
+        
         for(let filename of req.body.deleteimages)
-         {
+         {  console.log(filename)
             await cloudinary.uploader.destroy(filename)
          }
-        await newbase.updateOne({$pull:{images:{filename:{$in:req.body.deleteimages}}}})
+        await newbase.updateOne({$pull:{images:{filename:{$in:req.body.deleteimages}}}}) // to pull out the image from the database
+        // which are selected from the front end
     }
     res.status(200).send('updated')
 }
-
+exports.deleteroperties = async(req,res)=>
+{ 
+  const imagearray = await Property.findById(req.params.id)
+  for(let filename of imagearray.images)
+  { 
+    await cloudinary.uploader.destroy(filename.filename) // to access the filename of the images array to delete it under the loop
+  }
+   Property.findByIdAndDelete(req.params.id)
+    .then(properties=>{
+     if(!properties) {return res.status(400).json({error:"property not found"})}
+     else {return res.status(400).json({message:"deleted successfully"})}
+   })
+   .catch(err=>
+     {
+       res.status(400).json({error:err})
+     })
+}
 exports.getproperties = async(req,res) =>
 {
   const properties = await Property.find().populate({path:'Postedby',select:'username'})
   if(!properties){return res.status(400).json({error:"the properties is not found"})}
+  else res.send(properties)
+}
+exports.getsingleproperties = async(req,res)=>
+{
+  const properties = await Property.findById(req.params.id)
+  if(!properties){return res.status(400).json({error:"the property is not found"})}
   else res.send(properties)
 }

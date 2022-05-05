@@ -40,12 +40,14 @@ const registerSchema = new mongoose.Schema(
             type:Boolean,
             default:false
         },
-        cloudinaryid:{
-            type:String,
-        },
+        images:[
+            {
+                url:String,
+                filename:String
+            }
+        ],
         salt:String,
     },{timestamps:true})
-    
     
     registerSchema.virtual('password')
     .set(function(password){

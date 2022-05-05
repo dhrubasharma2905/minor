@@ -1,8 +1,12 @@
 const express = require('express')
 const router = express.Router()
-const { postimages } = require('../Controller/propertycontrol')
+const { postimages, getproperties, updateproperties, deleteroperties, getsingleproperties } = require('../Controller/propertycontrol')
 const {storage} = require('../utlis/cloudinary')
 const multer = require('multer')
 const upload = multer({storage})
 router.post('/post',upload.array('images',6),postimages)
+router.put("/updateproperty/:id",upload.array('images',6),updateproperties)
+router.get('/getproperty',getproperties)
+router.get('/getsingleproperty/:id',getsingleproperties)
+router.delete('/deleteproperty/:id',deleteroperties)
 module.exports = router;

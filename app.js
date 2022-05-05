@@ -18,10 +18,8 @@ app.use(expressValidator()) // yesma kina vanda import garirakhnu pardyena tei v
 app.use(cookieParser())
 const Userroute = require('./Route/userrouter')
 const Propertyroute = require('./Route/propertyrouter')
-const Georoute = require('./Route/georoute')
 app.use("/api",Userroute)
 app.use('/api',Propertyroute)
-app.use('/api',Georoute)
 const port = process.env.PORT
  // kun route call garyeko tha hunxa 
 app.listen(port,(req,res)=>{

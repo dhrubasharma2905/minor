@@ -56,12 +56,12 @@ const propertySchema = new mongoose.Schema({
         required:true,
         trim:true
     },
-    images:[
-        {
+    images:
+        [{
             url:String,
-            filename:String
-        }
-    ],
-    deleteimages:{type:[]}
+            filename:String,
+            cloudinaryid:String,
+        }]
+    
 },{timestamps:true})
 module.exports = mongoose.model('Property',propertySchema)
