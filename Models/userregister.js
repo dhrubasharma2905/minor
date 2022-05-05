@@ -40,6 +40,9 @@ const registerSchema = new mongoose.Schema(
             type:Boolean,
             default:false
         },
+        cloudinaryid:{
+            type:String,
+        },
         salt:String,
     },{timestamps:true})
     

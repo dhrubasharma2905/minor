@@ -1,5 +1,5 @@
 exports.registerationvalidation = (req,res,next) =>
-{
+{   console.log(req.body,req.files)
     req.check('firstname',"firstname is required").notEmpty()
     // tyo agadi ko firstname chai hamro userregister model
     // bata lekhya ho
