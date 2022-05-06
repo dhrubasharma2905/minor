@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const crypto = require('crypto')
+const {ObjectId}=mongoose.Schema
 const uuidv1 = require('uuidv1')
 const registerSchema = new mongoose.Schema(
     {
@@ -46,6 +47,10 @@ const registerSchema = new mongoose.Schema(
                 filename:String
             }
         ],
+        propertyid:[{
+            type:ObjectId,
+            ref:'Property'
+        }],
         salt:String,
     },{timestamps:true})
     

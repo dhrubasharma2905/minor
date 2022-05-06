@@ -1,10 +1,13 @@
 const Property = require("../Models/property");
+const User = require('../Models/userregister')
 const {cloudinary}= require('../utlis/cloudinary')
 const axios = require('axios');
 exports.postimages = async(req,res) =>
 {  
     const newProperty = new Property(req.body);
-    console.log(req.files)
+    newProperty.Postedby = req.user.id;
+    const foundUser = await User.findById(req.user.id);
+    if(!foundUser) throw new Error("you are not logged in");
     newProperty.images=req.files.map(f=>({url:f.path,filename:f.filename,cloudinaryid:f.filename.slice(-20)}));
     const params = {
       auth: '388475087947669536643x61803',
@@ -17,7 +20,9 @@ exports.postimages = async(req,res) =>
       newProperty.longitude=response.data.longt;
     }
     await newProperty.save();
-    res.status(200).send(newProperty);
+    foundUser.propertyid.push(newProperty._id);
+    await foundUser.save();
+    res.status(200).send({ newProperty, foundUser });
 };
 exports.updateproperties = async(req,res)=>
 {
@@ -57,10 +62,10 @@ exports.deleteroperties = async(req,res)=>
      })
 }
 exports.getproperties = async(req,res) =>
-{
-  const properties = await Property.find().populate({path:'Postedby',select:'username'})
-  if(!properties){return res.status(400).json({error:"the properties is not found"})}
-  else res.send(properties)
+{ 
+  const property = await Property.find().sort({createdAt:-1}).populate({path:'Postedby',select:'_id'})
+  if(!property){return res.status(400).json({error:"the properties is not found"})}
+  else res.send(property)
 }
 exports.getsingleproperties = async(req,res)=>
 {

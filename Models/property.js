@@ -44,6 +44,7 @@ const propertySchema = new mongoose.Schema({
     Postedby:{
         type:ObjectId,
         ref:'Register',
+        required:true
     },
     latitude:{
         type:Number

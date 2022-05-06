@@ -19,7 +19,7 @@ const verifyTokenAndAuthorization = (req,res,next)=>
 {
     verifytoken(req,res,()=>
     {
-        if(req.user.id===req.params.id || req.user.role){
+        if(req.user.id===req.params.id){
             next()
         }else{return res.status(403).json({error:"you are not allowed to do that!"})}
     })
