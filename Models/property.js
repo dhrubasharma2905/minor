@@ -1,5 +1,11 @@
 const mongoose = require('mongoose')
-const {ObjectId} = mongoose.Schema
+const {ObjectId} = mongoose.Schema;
+
+const ImageSchema = new mongoose.Schema({
+    url: String,
+    filename: String,
+});
+
 const propertySchema = new mongoose.Schema({
     propertyLocation:{
         type:String,
@@ -33,6 +39,10 @@ const propertySchema = new mongoose.Schema({
         type:Number,
         trim:true
     },
+    rooms: {
+        type: Number,
+        required: true,
+    },
     bedRoom:{
         type:Number,
         trim:true
@@ -45,6 +55,9 @@ const propertySchema = new mongoose.Schema({
         type:ObjectId,
         ref:'Register',
     },
+    propertyFacing: {
+        type: String,
+    },
     latitude:{
         type:Number
     },
@@ -56,12 +69,21 @@ const propertySchema = new mongoose.Schema({
         required:true,
         trim:true
     },
-    images:[
-        {
-            url:String,
-            filename:String
-        }
-    ],
+    Postedby:{
+        type:ObjectId,
+        ref:'Register',
+        required:true
+    },
+    category: {
+        type: String,
+        required: true,
+        trim: true,
+    },
+    appointment: {
+        type: ObjectId,
+        ref: "Appointment"
+    },
+    images: [ImageSchema],
     deleteimages:{type:[]}
 },{timestamps:true})
 module.exports = mongoose.model('Property',propertySchema)

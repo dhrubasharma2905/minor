@@ -1,14 +1,32 @@
 const mongoose = require('mongoose')
 const crypto = require('crypto')
+const {ObjectId}=mongoose.Schema
 const uuidv1 = require('uuidv1')
+
+const pendingAppointmentSchema = new mongoose.Schema({
+    requestingId: {
+        type: ObjectId,
+        ref: "Register",
+    }, propertyId: {
+        type: ObjectId,
+        ref: "Property"
+    }
+});
+
 const registerSchema = new mongoose.Schema(
     {
-        firstname:{
+        firstName:{
             type:String,
             required:true,
             trim:true
         },
-        lastname:{
+        activeAppointment: [
+            {
+                type: ObjectId,
+                ref: "Appointment"
+            }
+        ],
+        lastName:{
             type:String,
             required:true,
             trim:true
@@ -23,7 +41,11 @@ const registerSchema = new mongoose.Schema(
             type:String,
             required:true,
         },
-        phonenumber:{
+        myAppointment: [{
+            type: ObjectId,
+            ref: "Appointment"
+        }],
+        phoneNumber:{
             type:Number,
             reuired:true
         },
@@ -40,12 +62,19 @@ const registerSchema = new mongoose.Schema(
             type:Boolean,
             default:false
         },
-        cloudinaryid:{
-            type:String,
-        },
+        images:[
+            {
+                url:String,
+                filename:String
+            }
+        ],
+        propertyid:[{
+            type:ObjectId,
+            ref:'Property'
+        }],
+        pendingAppointment: [ pendingAppointmentSchema ],
         salt:String,
     },{timestamps:true})
-    
     
     registerSchema.virtual('password')
     .set(function(password){
