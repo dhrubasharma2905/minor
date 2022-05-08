@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { postimages, getproperties, updateproperties, deleteroperties, getsingleproperties } = require('../Controller/propertycontrol')
+const { postimages, getproperties, updateproperties, deleteroperties, getsingleproperties, search } = require('../Controller/propertycontrol')
 const {storage} = require('../utlis/cloudinary')
 const multer = require('multer')
 const { verifyTokenAndAuthorization, verifytoken } = require('../middleware/verifytoken')
@@ -10,4 +10,5 @@ router.put("/updateproperty/:id",upload.array('images',6),verifyTokenAndAuthoriz
 router.get('/getproperty',getproperties)
 router.get('/getsingleproperty/:id',getsingleproperties)
 router.delete('/deleteproperty/:id',verifyTokenAndAuthorization,deleteroperties)
+// router.post('/search',search)
 module.exports = router;

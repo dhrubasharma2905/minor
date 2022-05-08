@@ -2,6 +2,7 @@ const Property = require("../Models/property");
 const User = require('../Models/userregister')
 const {cloudinary}= require('../utlis/cloudinary')
 const axios = require('axios');
+const { stringify } = require("flatted");
 exports.postimages = async(req,res) =>
 {  
     const newProperty = new Property(req.body);
@@ -63,10 +64,24 @@ exports.deleteroperties = async(req,res)=>
 }
 exports.getproperties = async(req,res) =>
 { 
-  const property = await Property.find().sort({createdAt:-1}).populate({path:'Postedby',select:'_id'})
-  if(!property){return res.status(400).json({error:"the properties is not found"})}
-  else res.send(property)
+  if(Object.keys(req.query).length === 0){
+    const property = await Property.find().sort({createdAt:-1}).populate({path:'Postedby',select:'_id'})
+    if(!property){return res.status(400).json({error:"the properties is not found"})}
+    else res.send(property)
+  }
+  else{
+    const queryString = req.query.q
+    const queryStrings = queryString.split(" ")
+    allQueries =[]
+    queryStrings.forEach(element => {
+        allQueries.push({propertyLocation:{$regex : String(element),$options: 'i'}})
+    });
+    const property = await Property.find({$or : allQueries})
+    if(!property || property.length === 0) res.status(400).send({error : "No preperty listed in this area"})
+    else {return res.status(200).send(property) }
+  }
 }
+
 exports.getsingleproperties = async(req,res)=>
 {
   const properties = await Property.findById(req.params.id)

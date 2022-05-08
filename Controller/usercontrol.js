@@ -4,9 +4,7 @@ const jwt = require('jsonwebtoken')
 exports.userregisters = async(req,res) =>
 {    
     try{   
-        console.log(req.files)
         const findUser = await User.findOne({username:req.body.username})
-        console.log(findUser);
         if(findUser) {
             throw new Error("username already exists");
         } else {
@@ -57,11 +55,19 @@ exports.userlist=async (req,res)=>
 }
 exports.deleteuser = async(req,res)=>
 {
-    
+    try {
+        await User.findOneAndDelete({
+          _id: req.params.id,
+        });
+        return res.status(200).json('user deleted');
+      } catch (error) {
+        console.log(`error`, error);
+        return next(error);
+      }
 }
 exports.updateuser = async(req,res)=>
 {
-      const user = await User.findByIdAndUpdate(req.params.id,{...req.body},{new:true})
+    const user = await User.findByIdAndUpdate(req.params.id,{...req.body},{new:true})
     const imgs = req.files.map(f=>({url:f.path,filename:f.filename}))
     console.log(imgs)
  user.images.push(...imgs)

@@ -1,6 +1,6 @@
 const express = require("express")
 const router = express.Router()
-const { userregisters, postEmailConfirmation, signIn,signout, userlist, singleuser, resendverificationemail, deleteuser, updateuser } = require("../Controller/usercontrol")
+const { userregisters, signIn,signout, userlist, singleuser, deleteuser, updateuser } = require("../Controller/usercontrol")
 const {storage} = require('../utlis/cloudinary')
 const multer = require('multer')
 const upload = multer({storage})

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const crypto = require('crypto')
 const {ObjectId}=mongoose.Schema
+const Property = require('../Models/property')
 const uuidv1 = require('uuidv1')
 const registerSchema = new mongoose.Schema(
     {
@@ -53,6 +54,16 @@ const registerSchema = new mongoose.Schema(
         }],
         salt:String,
     },{timestamps:true})
+
+    registerSchema.post("findOneAndDelete", async doc => {
+        if (doc) {
+            await Property.deleteMany({
+                _id: {
+                    $in: doc.propertyid
+                }
+            });
+        };
+    });
     
     registerSchema.virtual('password')
     .set(function(password){
@@ -87,4 +98,5 @@ const registerSchema = new mongoose.Schema(
             }
         }
     }
+    
     module.exports = mongoose.model("Register",registerSchema)
