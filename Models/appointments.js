@@ -11,6 +11,9 @@ const appointmentSchema = new mongoose.Schema({
     type: ObjectId,
     ref: "Property"
   },
+  appointmentTime: {
+    type: String,
+  },
   location: {
     type: String,
   },

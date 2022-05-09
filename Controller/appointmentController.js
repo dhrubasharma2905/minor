@@ -28,11 +28,15 @@ const assignAppoinment = async (req, res, next) => {
     const newAppointment = new Appointment({
       location: req.body.location,
       appointmentDate: req.body.date,
+      appointmentTime: req.body.time
     });
     newAppointment.appointmentGiver = req.user.id;
     newAppointment.appointmentFor = pendingInfo[0].requestingId;
     newAppointment.property = pendingInfo[0].propertyId;
     await newAppointment.save();
+    const foundProperty = await Property.findById(newAppointment.property);
+    foundProperty.appointment.push(newAppointment._id);
+    await foundProperty.save();
     foundUser.activeAppointment.push(newAppointment._id);
     let filtered = foundUser.pendingAppointment.filter(a => pendingId !== a._id.toString());
     foundUser.pendingAppointment = filtered;

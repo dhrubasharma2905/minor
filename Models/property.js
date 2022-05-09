@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const {ObjectId} = mongoose.Schema;
+const Appointment = require("./appointments");
 
 const ImageSchema = new mongoose.Schema({
     url: String,
@@ -79,11 +80,23 @@ const propertySchema = new mongoose.Schema({
         required: true,
         trim: true,
     },
-    appointment: {
+    appointment: [{
         type: ObjectId,
         ref: "Appointment"
-    },
+    }],
     images: [ImageSchema],
     deleteimages:{type:[]}
-},{timestamps:true})
+},{timestamps:true});
+
+propertySchema.post("findOneAndDelete", async doc => {
+    if (doc) {
+        await Appointment.deleteMany({
+            _id: {
+                $in: doc.appointment
+            }
+        });
+    };
+});
+
+
 module.exports = mongoose.model('Property',propertySchema)

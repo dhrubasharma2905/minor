@@ -102,6 +102,8 @@ exports.singleuser = async(req,res) =>
         select: ["_id", "propertyName", "images", "propertyLocation"]
     }, {
         path: "myAppointment"
+    }, {
+        path: "propertyid"
     }])
     if(!user){return res.status(400).json({error:"the user is not found"})}
     res.send(user)

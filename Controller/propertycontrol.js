@@ -1,4 +1,5 @@
 const Property = require("../Models/property");
+const Appointment = require("../Models/appointments");
 const User = require("../Models/userregister");
 const {cloudinary}= require('../utlis/cloudinary')
 const { stringify } = require("flatted");
@@ -48,11 +49,6 @@ exports.getAllProperties = async(req,res) =>
     if(!property || property.length === 0) res.status(400).send({error : "No preperty listed in this area"})
     else {return res.status(200).send(property) }
   }
-  // if(req.query.search) {
-  //   const regex = new RegExp(escapeRegex(req.query.search), 'gi');
-  //   let queryLocation = await Property.find({$or: [{"propertyLocation":regex}]});
-  //   res.status(200).send(queryLocation);
-  // }
 };
 
 exports.getOneProperty = async (req, res) => {
