@@ -9,7 +9,7 @@ const cookieParser = require('cookie-parser')
 const expressValidator= require('express-validator')
 app.use(bodyparser.json())
 app.use(cors({
-    origin: "http://localhost:3000",
+    origin: process.env.FRONT_END_URL,
     methods: "GET, POST, PUT, DELETE",
     credentials: true,
   }));

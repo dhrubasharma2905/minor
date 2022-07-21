@@ -30,7 +30,6 @@ exports.userregisters = async(req,res) =>
 }
 }
 exports.signIn = async(req,res)=>{
-    console.log(req.body);
     const email =req.body.email
     const originalpassword = req.body.password
     const user = await User.findOne({email:email})
